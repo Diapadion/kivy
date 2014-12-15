@@ -1,0 +1,2 @@
+Trial,Accuracy,PicChosen,CorrectPic,PicsDisplayed,PortPressed,ActivePorts,TrialStart,SessionStart,SampleOn,SampleSelect,ChoiceOn,ChoiceSelect
+1,1,./stimuli/bakery-16 - bakery_display_case.jpg,./stimuli/bakery-16 - bakery_display_case.jpg,"['sc.10041.jpg', 'sc.10098.jpg']",5,"[3, 8, 5, 6]",1.2138288021087646,1413744195.982273,0.5158350467681885,1.1214191913604736,1.6402862071990967,2.1418161392211914

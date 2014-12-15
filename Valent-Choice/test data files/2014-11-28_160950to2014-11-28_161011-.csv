@@ -1,0 +1,9 @@
+StartTime,Touch,Time,ButtonChosen,Song,ButtonPosition
+1417190990.27672,1,7.086709022521973,,,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,2,7.086709022521973,pop,yello.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,3,11.96519684791565,classical,demicheli.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,4,11.96519684791565,classical,demicheli.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,5,15.474547863006592,pop,yello.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,6,15.474547863006592,classical,demicheli.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,7,18.55785584449768,classical,demicheli.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"
+1417190990.27672,8,18.55785584449768,pop,paranoid.wav,"{'bottom': <weakproxy at 0x02D42CF0 to Button at 0x02D3F0A0>, 'middle': <weakproxy at 0x02D42450 to Button at 0x02D3F068>, 'top': <weakproxy at 0x02D36BA0 to Button at 0x02D33F80>}"

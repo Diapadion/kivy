@@ -1,0 +1,462 @@
+
+<StartScreen>:
+    #name: 'startStim'
+    #on_enter: self.new_trial(self.pad)
+    FloatLayout:
+        canvas.before:
+            Color:
+                rgba: 0.1, 1, 0.1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size    
+        Button:
+            text: 'start'
+            size_hint: 0.9,0.4
+            pos_hint: {'center_x':.5, 'center_y': .5}
+            on_release: root.shift_to_sample(root.pad)
+    
+
+
+
+<MusicChoice>:
+    orientation: 'horizontal'
+    on_pre_enter: self.prepare_stimuli(self.pad)
+    #on_enter: self.change_stimuli()
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        # ! need a dynamic class for the choice buttons
+        Button:
+            id: top
+            loc: 'top'
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            #background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            #on_press: root.turn_on_rock(root.pad)
+        Button:
+            id: middle
+            loc: 'middle'
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            #background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            #on_press: root.turn_off(root.pad)
+        Button:
+            id: bottom
+            loc: 'bottom'
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            #background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            #on_press: root.turn_on_classical(root.pad)
+
+
+<OCR_MusicChoice>:
+    orientation: 'horizontal'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        Button:
+            id: top
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_off(root.pad)
+        Button:
+            id: middle
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_classical(root.pad)
+        Button:
+            id: bottom
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_rock(root.pad)
+
+<CRO_MusicChoice>:
+    orientation: 'horizontal'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        Button:
+            id: top
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_classical(root.pad)
+        Button:
+            id: middle
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_rock(root.pad)
+        Button:
+            id: bottom
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_off(root.pad)
+
+<RCO_MusicChoice>:
+    orientation: 'horizontal'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        Button:
+            id: top
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_rock(root.pad)
+        Button:
+            id: middle
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_classical(root.pad)
+        Button:
+            id: bottom
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_off(root.pad)
+
+<ORC_MusicChoice>:
+    orientation: 'horizontal'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        Button:
+            id: top
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_off(root.pad)
+        Button:
+            id: middle
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_rock(root.pad)
+        Button:
+            id: bottom
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_classical(root.pad)
+
+<COR_MusicChoice>:
+    orientation: 'horizontal'
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 1, 1, 1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        rows: 3
+        spacing: 10
+        padding: 10
+        Button:
+            id: top
+            background_normal: 'dots.jpg'
+            background_down: 'dots.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_classical(root.pad)
+        Button:
+            id: middle
+            background_normal: 'zigzag.jpg'
+            background_down: 'zigzag.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_off(root.pad)
+        Button:
+            id: bottom
+            background_normal: 'fractal.jpg'
+            background_down: 'fractal.jpg'
+            background_color: (0,0,0,1)
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_press: root.turn_on_rock(root.pad)
+
+
+
+
+
+
+<AlternateGridMusicChoice>:
+    orientation: 'horizontal'
+    on_pre_enter: self.prepare_stimuli(self.pad)
+    #on_enter: self.change_stimuli()
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 0.1, 1, 0.1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 3
+        spacing: 10
+        padding: 10
+        # may need a dynamic class for the choice buttons
+        Button:
+            id: n1
+            marker: 1
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            marker: 2
+            id: n2            
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n3
+            marker: 3
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n4
+            marker: 4
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n5
+            marker: 5
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n6
+            marker: 6
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n7
+            marker: 7
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n8
+            marker: 8
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n9
+            marker: 9
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.music_change(self.marker, self.background_normal, root.pad)
+
+
+
+
+
+<ChoiceScreen>:       
+    orientation: 'horizontal'
+    on_pre_enter: self.prepare_choices(root.pad)
+    GridLayout:
+        canvas.before:
+            Color:
+                rgba: 0.1, 1, 0.1, 0.7
+            Rectangle:
+                pos: self.pos
+                size: self.size
+        cols: 3
+        spacing: 10
+        padding: 10
+        # may need a dynamic class for the choice buttons
+        Button:
+            id: n1
+            marker: 1
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            marker: 2
+            id: n2            
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n3
+            marker: 3
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n4
+            marker: 4
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n5
+            marker: 5
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n6
+            marker: 6
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n7
+            marker: 7
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n8
+            marker: 8
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n9
+            marker: 9
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+ 
+       
+            
+<TimeOut>:
+    canvas:
+        Color:
+            rgba: 0, 0, 0, 0
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_pre_enter: self.play_neg_sound()        
+    on_enter: Clock.schedule_once(self.begin_new_trial, self.tointLen)
+
+
+<PosReinforce>:
+    canvas:
+        Color:
+            rgba: 0.7, 0.3, 0.3, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_pre_enter: self.food_sound_feedback()
+    on_enter: Clock.schedule_once(self.begin_new_trial, self.reintLen)
+
+
+<InterTrialInterval>:
+    canvas:
+        Color:
+            rgba: 0.1, 1, 0.1, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_pre_enter: self.update_data(root.pad)
+    on_enter: Clock.schedule_once(self.start_trial, root.pad.itiLen)
+        
+
+
+<EmptyPause>:
+    canvas:
+        Color:
+            rgba: 0.1, 1, 0.1, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_enter: Clock.schedule_once(self.display_sample, 0.5) # need to make '0.5' into var; input var
+
+
+
+    
+<Delay>
+    id: delay
+    canvas:
+        Color:
+            rgba: 0.1, 1, 0.1, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_enter: Clock.schedule_once(self.display_choice, root.locDelay) # need to make '0.5' into var; input var
+
+
+
+
+
+
+            
+            

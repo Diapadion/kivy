@@ -1,0 +1,2 @@
+Trial,Accuracy,PicChosen,CorrectPic,PicsDisplayed,PortPressed,ActivePorts,TrialStart,SessionStart,SampleOn,SampleSelect,ChoiceOn,ChoiceSelect
+1,1,./stimuli/arch - arch.jpg,./stimuli/arch - arch.jpg,"['sc.10041.jpg', 'sc.10098.jpg']",7,"[6, 4, 3, 7, 2]",2.8389999866485596,1413734449.377337,0.5120000839233398,1.2750000953674316,1.7880001068115234,5.045000076293945

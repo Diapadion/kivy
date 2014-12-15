@@ -1,0 +1,105 @@
+
+
+
+###
+
+
+
+        Button:
+            id: n10
+            marker: 10
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n11
+            marker: 11
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n12
+            marker: 12
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n13
+            marker: 13
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n14
+            marker: 14
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n15
+            marker: 15
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'      
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+        Button:
+            id: n16
+            marker: 16
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.shift_to_choice(self.marker, self.background_normal, root.pad)
+
+
+
+
+
+###
+
+
+        Button:
+            id: n10
+            marker: 10
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n11
+            marker: 11
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n12
+            marker: 12
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n13
+            marker: 13
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n14
+            marker: 14
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n15
+            marker: 15
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'      
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+        Button:
+            id: n16
+            marker: 16
+            background_disabled_down: 'whiteBkgd.png'
+            background_disabled_normal: 'whiteBkgd.png'
+            on_release: root.trial_result(self.marker, self.background_normal,root.pad)
+
+
+###
+
+
+

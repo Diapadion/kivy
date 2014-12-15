@@ -1,0 +1,17 @@
+timeout: 0.5
+topButton: rock
+middleButton: classical
+bottomButton: off
+date: 11/08/14
+trials: 40
+iti: 0.5
+delay: 0.5
+distractors: 1
+samples: sc.10041.jpg sc.10098.jpg
+choices: sc.10041.jpg sc.10098.jpg
+Subject: [chimp] 
+Chamber: 3
+Pellets: 100
+Start: 4/26/12
+Notes: insertion-deletion, start on 04-10-12
+pics: 20881 20882 20883 20884 20885 20886 20887 20888 20889

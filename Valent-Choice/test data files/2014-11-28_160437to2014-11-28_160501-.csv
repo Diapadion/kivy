@@ -1,0 +1,5 @@
+StartTime,Touch,Time,ButtonChosen,Song,ButtonPosition
+1417190677.099406,1,12.49324893951416,,,"{'middle': <weakproxy at 0x02D6F3C0 to Button at 0x02D6C068>, 'bottom': <weakproxy at 0x02D6FC60 to Button at 0x02D6C0A0>, 'top': <weakproxy at 0x02D64B10 to Button at 0x02D60F80>}"
+1417190677.099406,2,12.49324893951416,pop,paranoid.wav,"{'middle': <weakproxy at 0x02D6F3C0 to Button at 0x02D6C068>, 'bottom': <weakproxy at 0x02D6FC60 to Button at 0x02D6C0A0>, 'top': <weakproxy at 0x02D64B10 to Button at 0x02D60F80>}"
+1417190677.099406,3,23.717370986938477,classical,demicheli.wav,"{'middle': <weakproxy at 0x02D6F3C0 to Button at 0x02D6C068>, 'bottom': <weakproxy at 0x02D6FC60 to Button at 0x02D6C0A0>, 'top': <weakproxy at 0x02D64B10 to Button at 0x02D60F80>}"
+1417190677.099406,4,23.717370986938477,classical,demicheli.wav,"{'middle': <weakproxy at 0x02D6F3C0 to Button at 0x02D6C068>, 'bottom': <weakproxy at 0x02D6FC60 to Button at 0x02D6C0A0>, 'top': <weakproxy at 0x02D64B10 to Button at 0x02D60F80>}"
