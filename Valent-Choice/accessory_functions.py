@@ -5,6 +5,8 @@ import datetime # added 19/08
 
 from kivy.graphics.context_instructions import Color
 
+from functools import partial
+
 
 
 
@@ -89,8 +91,67 @@ def enable_all_buttons(ob):
 
 time.time()
 
-
-
+def randomize_buttons_layouts(self,pad,rint):
+    if rint == 1 :
+        self.ids.top.on_press = partial(self.turn_on_rock,pad)
+        self.ids.top.background_normal = 'zigzag.jpg'
+        self.ids.top.background_down = 'zigzag.jpg'
+        self.ids.middle.on_press = partial(self.turn_off,pad)
+        self.ids.middle.background_normal = 'dots.jpg'
+        self.ids.middle.background_down = 'dots.jpg'
+        self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
+        self.ids.bottom.background_normal = 'stripes-up.jpg'
+        self.ids.bottom.background_down = 'stripes-up.jpg'
+    elif rint == 2 :
+        self.ids.top.on_press = partial(self.turn_on_rock,pad)
+        self.ids.top.background_normal = 'zigzag.jpg'
+        self.ids.top.background_down = 'zigzag.jpg'
+        self.ids.middle.on_press = partial(self.turn_on_classical,pad)
+        self.ids.middle.background_normal = 'stripes-up.jpg'
+        self.ids.middle.background_down = 'stripes-up.jpg'
+        self.ids.bottom.on_press = partial(self.turn_off,pad)
+        self.ids.bottom.background_normal = 'dots.jpg'
+        self.ids.bottom.background_down = 'dots.jpg'
+    elif rint == 3 :
+        self.ids.top.on_press = partial(self.turn_off,pad)
+        self.ids.top.background_normal = 'dots.jpg'
+        self.ids.top.background_down = 'dots.jpg'
+        self.ids.middle.on_press = partial(self.turn_on_rock,pad)
+        self.ids.middle.background_normal = 'zigzag.jpg'
+        self.ids.middle.background_down = 'zigzag.jpg'
+        self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
+        self.ids.bottom.background_normal = 'stripes-up.jpg'
+        self.ids.bottom.background_down = 'stripes-up.jpg'
+    elif rint == 4 :
+        self.ids.top.on_press = partial(self.turn_off,pad)
+        self.ids.top.background_normal = 'dots.jpg'
+        self.ids.top.background_down = 'dots.jpg'
+        self.ids.middle.on_press = partial(self.turn_on_classical,pad)
+        self.ids.middle.background_normal = 'stripes-up.jpg'
+        self.ids.middle.background_down = 'stripes-up.jpg'
+        self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
+        self.ids.bottom.background_normal = 'zigzag.jpg'
+        self.ids.bottom.background_down = 'zigzag.jpg'
+    elif rint == 5 :
+        self.ids.top.on_press = partial(self.turn_on_classical,pad)
+        self.ids.top.background_normal = 'stripes-up.jpg'
+        self.ids.top.background_down = 'stripes-up.jpg'
+        self.ids.middle.on_press = partial(self.turn_on_rock,pad)
+        self.ids.middle.background_normal = 'zigzag.jpg'
+        self.ids.middle.background_down = 'zigzag.jpg'
+        self.ids.bottom.on_press = partial(self.turn_off,pad)
+        self.ids.bottom.background_normal = 'dots.jpg'
+        self.ids.bottom.background_down = 'dots.jpg'
+    elif rint == 6 :
+        self.ids.top.on_press = partial(self.turn_on_classical,pad)
+        self.ids.top.background_normal = 'stripes-up.jpg'
+        self.ids.top.background_down = 'stripes-up.jpg'
+        self.ids.middle.on_press = partial(self.turn_off,pad)
+        self.ids.middle.background_normal = 'dots.jpg'
+        self.ids.middle.background_down = 'dots.jpg'
+        self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
+        self.ids.bottom.background_normal = 'zigzag.jpg'
+        self.ids.bottom.background_down = 'zigzag.jpg'
 
        
        
@@ -129,10 +190,11 @@ def globalize(pdict):
 #    global dLen
 
     timeout = float(pdict['timeout:'])
+    hold = float(pdict['holdingTime:'])
 
     top = pdict['topButton:']
     middle = pdict['middleButton:']
     bottom = pdict['bottomButton:']
 
 
-    return timeout, top, middle, bottom
+    return timeout, hold, top, middle, bottom

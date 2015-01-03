@@ -1,21 +1,33 @@
 
-<StartScreen>:
-    #name: 'startStim'
-    #on_enter: self.new_trial(self.pad)
+#:import Clock kivy.clock.Clock
+
+<Start>:
+    name: 'startStim'
+    on_enter: self.new_trial(self.pad)
     FloatLayout:
         canvas.before:
             Color:
-                rgba: 0.1, 1, 0.1, 0.7
+                rgba: 1, 1, 1, 0.7
             Rectangle:
                 pos: self.pos
-                size: self.size    
+                size: self.size
         Button:
             text: 'start'
-            size_hint: 0.9,0.4
+            size_hint: 0.9,0.9
             pos_hint: {'center_x':.5, 'center_y': .5}
-            on_release: root.shift_to_sample(root.pad)
-    
+            background_normal: 'greenCirc.jpg'
+            background_down: 'greenCirc.jpg'
+            on_press: root.shift_to_holding(root.pad)
 
+
+<Holding>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_enter: Clock.schedule_once(self.display_music_buttons, root.pad.hold)
 
 
 <MusicChoice>:
@@ -431,18 +443,6 @@
         
 
 
-<EmptyPause>:
-    canvas:
-        Color:
-            rgba: 0.1, 1, 0.1, 0.7
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    on_enter: Clock.schedule_once(self.display_sample, 0.5) # need to make '0.5' into var; input var
-
-
-
-    
 <Delay>
     id: delay
     canvas:

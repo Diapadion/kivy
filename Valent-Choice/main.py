@@ -114,17 +114,18 @@ class ParametersAndData:
 
     #dLen, itiLen, toLen, maxTrials, distractors, sampleList, choiceList = globalize(pdict)
 
-    timeout, top, mid, bottom = globalize(pdict)
+    timeout, hold, top, mid, bottom = globalize(pdict)
 
 
-    #distractors = sys.argv[1]
+    phase = sys.argv[1]
 
     inputfile.close()
 
     # active variables for time keeping
     sessionStartT = time.time()  # the reference time
 
-    touch = 1
+    trial = 1
+    #touch = 1
 
 
     # these till be modified on a rolling basis
@@ -165,77 +166,74 @@ class ParametersAndData:
 parameVars = ParametersAndData
 
 
+class Start(Screen):  ##should Anchor/Box/etc.layout be Screen?
+    pad = ObjectProperty(parameVars)
+
+
+    def new_trial(self, pad):
+        pad.trial = pad.trial + 1
+
+
+    def shift_to_holding(self, pad):
+        #global trialStartT
+        pad.trialStartT = time.time() - pad.sessionStartT
+
+        #Clock.schedule_once(self.sample_screen_on, delay)
+        self.manager.current = 'holder'
+
+
+class Holding(Screen):  # aka time between start stim and sample
+    pad = ObjectProperty(parameVars)
+
+    def display_music_buttons(self, dt):
+        self.manager.current = 'music'
+
+
 
 class MusicChoice(Screen):
     pad = ObjectProperty(parameVars)
 
     def prepare_stimuli(self, pad):
+        butt_pos = random.randint(1,6)
+        randomize_buttons_layouts(self,pad,butt_pos)   # fairly self-explanatory
+        # TODO this needs to randomize by TRIAL, not 'session'
 
-        if pad.top == 'rock':
-            if pad.mid == 'off':
-                self.ids.top.on_press = partial(self.turn_on_rock,pad)
-                self.ids.top.background_normal = 'zigzag.jpg'
-                self.ids.top.background_down = 'zigzag.jpg'
-                self.ids.middle.on_press = partial(self.turn_off,pad)
-                self.ids.middle.background_normal = 'dots.jpg'
-                self.ids.middle.background_down = 'dots.jpg'
-                self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
-                self.ids.bottom.background_normal = 'stripes-up.jpg'
-                self.ids.bottom.background_down = 'stripes-up.jpg'
-            elif pad.mid == 'classical':
-                self.ids.top.on_press = partial(self.turn_on_rock,pad)
-                self.ids.top.background_normal = 'zigzag.jpg'
-                self.ids.top.background_down = 'zigzag.jpg'
-                self.ids.middle.on_press = partial(self.turn_on_classical,pad)
-                self.ids.middle.background_normal = 'stripes-up.jpg'
-                self.ids.middle.background_down = 'stripes-up.jpg'
-                self.ids.bottom.on_press = partial(self.turn_off,pad)
-                self.ids.bottom.background_normal = 'dots.jpg'
-                self.ids.bottom.background_down = 'dots.jpg'
-        elif pad.top == 'off':
-            if pad.mid == 'rock':
-                self.ids.top.on_press = partial(self.turn_off,pad)
-                self.ids.top.background_normal = 'dots.jpg'
-                self.ids.top.background_down = 'dots.jpg'
-                self.ids.middle.on_press = partial(self.turn_on_rock,pad)
-                self.ids.middle.background_normal = 'zigzag.jpg'
-                self.ids.middle.background_down = 'zigzag.jpg'
-                self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
-                self.ids.bottom.background_normal = 'stripes-up.jpg'
-                self.ids.bottom.background_down = 'stripes-up.jpg'
-            elif pad.mid == 'classical':
-                self.ids.top.on_press = partial(self.turn_off,pad)
-                self.ids.top.background_normal = 'dots.jpg'
-                self.ids.top.background_down = 'dots.jpg'
-                self.ids.middle.on_press = partial(self.turn_on_classical,pad)
-                self.ids.middle.background_normal = 'stripes-up.jpg'
-                self.ids.middle.background_down = 'stripes-up.jpg'
-                self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
-                self.ids.bottom.background_normal = 'zigzag.jpg'
-                self.ids.bottom.background_down = 'zigzag.jpg'
-        elif pad.top == 'classical':
-            if pad.mid == 'rock':
-                self.ids.top.on_press = partial(self.turn_on_classical,pad)
-                self.ids.top.background_normal = 'stripes-up.jpg'
-                self.ids.top.background_down = 'stripes-up.jpg'
-                self.ids.middle.on_press = partial(self.turn_on_rock,pad)
-                self.ids.middle.background_normal = 'zigzag.jpg'
-                self.ids.middle.background_down = 'zigzag.jpg'
-                self.ids.bottom.on_press = partial(self.turn_off,pad)
-                self.ids.bottom.background_normal = 'dots.jpg'
-                self.ids.bottom.background_down = 'dots.jpg'
-            elif pad.mid == 'off':
-                self.ids.top.on_press = partial(self.turn_on_classical,pad)
-                self.ids.top.background_normal = 'stripes-up.jpg'
-                self.ids.top.background_down = 'stripes-up.jpg'
-                self.ids.middle.on_press = partial(self.turn_off,pad)
-                self.ids.middle.background_normal = 'dots.jpg'
-                self.ids.middle.background_down = 'dots.jpg'
-                self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
-                self.ids.bottom.background_normal = 'zigzag.jpg'
-                self.ids.bottom.background_down = 'zigzag.jpg'
+        # appropriate button enabling
+        print(self.ids.bottom.background_down)
+        print(self.ids.top.background_down != 'zigzag.jpg')
 
+        if pad.phase == 1:
+            # classical button presented singly
+            if self.ids.top.background_down != 'stripes-up.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'stripes-up.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'stripes-up.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 2:
+            # pop button presented singly
+            if self.ids.top.background_down != 'zigzag.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'zigzag.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'zigzag.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 3:
+            if self.ids.top.background_down != 'dots.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'dots.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'dots.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 4:
             enable_all_buttons(self)
+
+        elif pad.phase == 5:
+            enable_all_buttons(self)
+
 
 
     def load_name(self, *l):
@@ -247,13 +245,13 @@ class MusicChoice(Screen):
 
     def update_data(self, pad):
         dickory = time.time() - pad.sessionStartT
-        pad.data.append([pad.sessionStartT, pad.touch, dickory,
+        pad.data.append([pad.sessionStartT, pad.trial, dickory,
                          pad.thisGenre, pad.thisSongChoice])
             #, pad.buttonLocation])
 
 
 
-        pad.touch = pad.touch + 1
+        pad.trial = pad.trial + 1
 
 
 
@@ -338,21 +336,7 @@ class InterTrialInterval(Screen):
         self.manager.current = 'startStim'
 
 
-class StartScreen(Screen):  ##should Anchor/Box/etc.layout be Screen?
-    pad = ObjectProperty(parameVars)
 
-    # unused...
-    def new_trial(self, pad):
-        pad.trial = pad.trial + 1
-
-
-    def shift_to_sample(self, pad):
-        #    global trialStartT
-        pad.trialStartT = time.time() - pad.sessionStartT
-        delay = 0.5  #this needs to be made into an input var
-
-        #Clock.schedule_once(self.sample_screen_on, delay)
-        self.manager.current = 'initialPause'
 
     ###
     # unless we need to have use of a more general blank delay screen,
@@ -368,10 +352,6 @@ class StartScreen(Screen):  ##should Anchor/Box/etc.layout be Screen?
 
 ###
 
-class EmptyPause(Screen):  # aka time between start stim and sample
-
-    def display_sample(self, dt):
-        self.manager.current = 'sample'
 
 
 class SampleScreen(Screen):
@@ -541,8 +521,9 @@ class ChoiceScreen(Screen):
 #root_widget = Builder.load_file('C:/Program Files (x86)/Kivy-1.8.0-py3.3-win32/kivy/mine/sample.kv')
 #Builder.load_file('Z:/kivy/DMTS/DMTS.kv')
 #Builder.load_file('C:/Users/Diapadion/Dropbox/python - kivy/Valent-Choice/ValentChoice.kv')
-Builder.load_file('C:/Users/s1229179/Dropbox/python - kivy/Valent-Choice/ValentChoice.kv')
+#Builder.load_file('C:/Users/s1229179/Dropbox/python - kivy/Valent-Choice/ValentChoice.kv')
 #Builder.load_file('/home/dremalt/Desktop/zoo-programs/Valent-Choice/ValentChoice.kv')
+Builder.load_file('C:/Users/Diapadion/Documents/GitHub/kivy/Valent-Choice/ValentChoice.kv')
 
 # before beginning the task, we need to import the parameters for the session
 # saving the parameters as globals ... or is this bad practice ???
@@ -565,7 +546,8 @@ sm.add_widget(MusicChoice(name='music'))
 
 sm.add_widget(SampleScreen(name='sample'))
 
-sm.add_widget(StartScreen(name='startStim'))
+sm.add_widget(Holding(name='holder'))
+sm.add_widget(Start(name='startStim'))
 # must specify length of pauses for these, time must become variable
 
 
@@ -573,7 +555,7 @@ sm.add_widget(StartScreen(name='startStim'))
 
 
 
-sm.current = 'music'
+sm.current = 'startStim'
 
 
 class DMTSApp(App):
