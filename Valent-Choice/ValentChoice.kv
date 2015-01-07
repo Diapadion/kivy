@@ -43,6 +43,15 @@
     on_enter: Clock.schedule_once(self.start_new_trial, root.pad.hold)
 
 
+<Holding>:
+    canvas:
+        Color:
+            rgba: 1, 1, 1, 0.7
+        Rectangle:
+            pos: self.pos
+            size: self.size
+    on_enter: Clock.schedule_once(self.display_music_buttons, root.pad.hold)
+
 
 <MusicChoice>:
     orientation: 'horizontal'

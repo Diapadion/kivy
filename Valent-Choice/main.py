@@ -92,16 +92,17 @@ class ParametersAndData:
 
     phase = int(sys.argv[1])
 
+
     inputfile.close()
 
     # active variables for time keeping
     sessionStartT = time.time()  # the reference time
 
     trial = 1
-    touch = 1
 
+    #touch = 1
 
-    # these till be modified on a rolling basis
+    # these will be modified on a rolling basis
 
 
     thisSongChoice = ''
@@ -182,6 +183,43 @@ class MusicChoice(Screen):
     pad = ObjectProperty(parameVars)
 
     def prepare_stimuli(self, pad):
+        butt_pos = random.randint(1,6)
+        randomize_buttons_layouts(self,pad,butt_pos)   # fairly self-explanatory
+        # TODO this needs to randomize by TRIAL, not 'session'
+
+        # appropriate button enabling
+        print(self.ids.bottom.background_down)
+        print(self.ids.top.background_down != 'zigzag.jpg')
+
+        if pad.phase == 1:
+            # classical button presented singly
+            if self.ids.top.background_down != 'stripes-up.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'stripes-up.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'stripes-up.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 2:
+            # pop button presented singly
+            if self.ids.top.background_down != 'zigzag.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'zigzag.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'zigzag.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 3:
+            if self.ids.top.background_down != 'dots.jpg':
+                self.ids.top.disabled = True
+            if self.ids.middle.background_down != 'dots.jpg':
+                self.ids.middle.disabled = True
+            if self.ids.bottom.background_down != 'dots.jpg':
+                self.ids.bottom.disabled = True
+
+        elif pad.phase == 4:
+            enable_all_buttons(self)
+
 
         disable_all_buttons(self)
 
@@ -321,14 +359,11 @@ class MusicChoice(Screen):
         #     enable_all_buttons(self)
 
 
-
     def load_name(self, *l):
         for id_str, widget in self.parent.ids.iteritems():
             if widget.__self__ is self:
                 self.name = id_str
                 return
-
-
 
 
 
@@ -441,18 +476,16 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
 
 
 
-
-
-
 #root_widget = Builder.load_file('C:/Program Files (x86)/Kivy-1.8.0-py3.3-win32/kivy/mine/sample.kv')
 #Builder.load_file('E:/Valent-Choice/ValentChoice.kv')
 #Builder.load_file('Z:/kivy/DMTS/DMTS.kv')
 #Builder.load_file('C:/Users/Diapadion/Dropbox/python - kivy/Valent-Choice/ValentChoice.kv')
-Builder.load_file('C:/Users/s1229179/git-repos/kivy/Valent-Choice/ValentChoice.kv')
+#Builder.load_file('C:/Users/s1229179/git-repos/kivy/Valent-Choice/ValentChoice.kv')
 #Builder.load_file('C:/Users/Diapadion/Documents/GitHub/kivy/Valent-Choice/ValentChoice.kv')
 #
 #Builder.load_file('/home/emma/Desktop/Emma/ValentChoice.kv')
 #
+
 
 
 
@@ -472,6 +505,7 @@ sm.add_widget(MusicChoice(name='music'))
 
 sm.add_widget(Holding(name='holder'))
 sm.add_widget(ResetInterval(name='reset'))
+
 sm.add_widget(Start(name='startStim'))
 # must specify length of pauses for these, time must become variable
 
