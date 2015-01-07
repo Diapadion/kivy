@@ -103,3 +103,35 @@
 
 
 
+
+
+
+# this is for compiling the Kivy python app under Windows
+
+def prep_win_standalone():
+    class DummyStream():
+        def __init__(self):
+            pass
+
+        def write(self, data):
+            pass
+
+        def read(self, data):
+            pass
+
+        def flush(self):
+            pass
+
+        def close(self):
+            pass
+
+    sys.stdin = DummyStream()
+    sys.stdout = DummyStream()
+    sys.stderr = DummyStream()
+    sys.__stdin__ = DummyStream()
+    sys.__stdout__ = DummyStream()
+    sys.__stderr__ = DummyStream()
+
+    exec_dir = dirname(realpath(sys.argv[0]))
+    #environ['KIVY_DATA_DIR'] = join(exec_dir, 'data')
+    environ['KIVY_DATA_DIR'] = 'C:\Program Files (x86)\Kivy-1.8.0-py3.3-win32\kivy\kivy\data'

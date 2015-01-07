@@ -1,4 +1,5 @@
 timeout: 0.5
+holdingTime: 1.5
 topButton: rock
 middleButton: classical
 bottomButton: off
