@@ -32,10 +32,11 @@ def write_data(data,start):
 def update_data(pad):
         dickory = time.time() - pad.sessionStartT
         pad.data.append([pad.sessionStartT, pad.trial, dickory,
-                         pad.thisGenre, pad.thisSongChoice,pad.butt_pos])
+                         pad.thisGenre, pad.thisSongChoice,pad.butt_pos,pad.failedAttempt])
             #, pad.buttonLocation])
 
         #pad.trial = pad.trial + 1
+
 
 
 
@@ -205,5 +206,7 @@ def globalize(pdict):
     middle = pdict['middleButton:']
     bottom = pdict['bottomButton:']
 
+    maxTrials = float(pdict['trials:'])
 
-    return timeout, hold, top, middle, bottom
+
+    return timeout, hold, top, middle, bottom, maxTrials

@@ -21,8 +21,6 @@ from os.path import join, dirname, realpath
 from functools import partial
 
 
-
-
 import pygame
 
 from kivy.lang import Builder
@@ -87,7 +85,7 @@ class ParametersAndData:
 
     #dLen, itiLen, toLen, maxTrials, distractors, sampleList, choiceList = globalize(pdict)
 
-    timeout, hold, top, mid, bottom = globalize(pdict)
+    timeout, hold, top, mid, bottom, maxTrials = globalize(pdict)
 
 
     phase = int(sys.argv[1])
@@ -124,6 +122,12 @@ class ParametersAndData:
     butt_pos = 0
     randStartPos = False
     failedAttempt = 0
+    lastAttemptSuccess = True
+
+    actualStart = False
+
+    subtype4 = random.sample([1,1,1,2,2,2,3,3,3,],9)
+    subtype4.append(random.sample([2,3],1))
 
 
 
@@ -135,7 +139,7 @@ class ParametersAndData:
     #          'TrialStart', 'SessionStart',  # 'AbsTime', # redundant
     #          'SampleOn', 'SampleSelect', 'ChoiceOn', 'ChoiceSelect']]
 
-    data = [['StartTime','Touch','Time','ButtonChosen','Song','ButtonPosition']]
+    data = [['StartTime','Trial','Time','MusicPlaying','Song','ButtonPosition','FailedAttempt']]
 
 
 # and now, the instance:
@@ -152,6 +156,8 @@ class Start(Screen):  ##should Anchor/Box/etc.layout be Screen?
         pad.trial = pad.trial + 1
         #pygame.mixer.music.stop()
 
+    def stop_music(self):
+        pygame.mixer.music.stop()
 
 
     def shift_to_holding(self, pad):
@@ -161,6 +167,7 @@ class Start(Screen):  ##should Anchor/Box/etc.layout be Screen?
         pad.butt_pos = 0
         pad.randStartPos = False
         pad.failedAttempt = 0
+        pad.actualStart = True
 
 
         pad.thisSongChoice = 'N/A'
@@ -175,7 +182,14 @@ class Holding(Screen):  # aka time between start stim and sample
     pad = ObjectProperty(parameVars)
 
     def display_music_buttons(self, dt):
+
         self.manager.current = 'music'
+
+
+    def check_endpoint(self,pad):
+        if pad.trial > pad.maxTrials:
+            App.get_running_app().stop()
+
 
 
 
@@ -187,126 +201,46 @@ class MusicChoice(Screen):
         randomize_buttons_layouts(self,pad,butt_pos)   # fairly self-explanatory
         # TODO this needs to randomize by TRIAL, not 'session'
 
-        # appropriate button enabling
-        print(self.ids.bottom.background_down)
-        print(self.ids.top.background_down != 'zigzag.jpg')
 
         if pad.phase == 1:
-            # classical button presented singly
-            if self.ids.top.background_down != 'stripes-up.jpg':
-                self.ids.top.disabled = True
-            if self.ids.middle.background_down != 'stripes-up.jpg':
-                self.ids.middle.disabled = True
-            if self.ids.bottom.background_down != 'stripes-up.jpg':
-                self.ids.bottom.disabled = True
+           self.phase1(pad)
 
         elif pad.phase == 2:
-            # pop button presented singly
-            if self.ids.top.background_down != 'zigzag.jpg':
-                self.ids.top.disabled = True
-            if self.ids.middle.background_down != 'zigzag.jpg':
-                self.ids.middle.disabled = True
-            if self.ids.bottom.background_down != 'zigzag.jpg':
-                self.ids.bottom.disabled = True
+            self.phase2(pad)
 
         elif pad.phase == 3:
-            if self.ids.top.background_down != 'dots.jpg':
-                self.ids.top.disabled = True
-            if self.ids.middle.background_down != 'dots.jpg':
-                self.ids.middle.disabled = True
-            if self.ids.bottom.background_down != 'dots.jpg':
-                self.ids.bottom.disabled = True
+            self.phase3(pad)
 
         elif pad.phase == 4:
-            enable_all_buttons(self)
+
+             if pad.lastAttemptSuccess:
+                   ind = pad.subtype4.pop(0)
+
+             if ind==1:
+                 self.phase1(pad)
+
+             elif ind==2:
+                 self.phase2(pad)
+
+             elif ind==3:
+                 self.phase3(pad)
 
 
-        disable_all_buttons(self)
+        # disable_all_buttons(self)
+        # Clock.schedule_once(self.failed_attempt, 30)
 
-
-
-        Clock.schedule_once(self.failed_attempt, 30)
-
-        if pad.phase == 1:
-            pad.butt_pos = random.randint(1,3)   #formerly 3 => 6, and should be so again...(?)
-            pad.thisGenre = 'pop'
-            pad.randStartPos = True
-            if pad.butt_pos == 1:
-                self.ids.top.on_press = partial(self.turn_on_rock,pad)
-                self.ids.top.background_normal = 'zigzag.jpg'
-                self.ids.top.background_down = 'zigzag.jpg'
-                self.ids.top.disabled = False
-#                print("phase 1, pos 1")
-            elif pad.butt_pos == 2:
-                self.ids.middle.on_press = partial(self.turn_on_rock,pad)
-                self.ids.middle.background_normal = 'zigzag.jpg'
-                self.ids.middle.background_down = 'zigzag.jpg'
-                self.ids.middle.disabled = False
-#                print("phase 1, pos 2")
-            elif pad.butt_pos == 3:
-                self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
-                self.ids.bottom.background_normal = 'zigzag.jpg'
-                self.ids.bottom.background_down = 'zigzag.jpg'
-                self.ids.bottom.disabled = False
-#                print("phase 1, pos 3")
-#            else:
-#                print("phase 1 failure")
-
-        elif pad.phase == 2:
-            pad.butt_pos = random.randint(1,3)
-            pad.thisGenre = 'classical'
-            pad.randStartPos = True
-            if pad.butt_pos == 1:
-                self.ids.top.on_press = partial(self.turn_on_classical,pad)
-                self.ids.top.background_normal = 'stripes-up.jpg'
-                self.ids.top.background_down = 'stripes-up.jpg'
-                self.ids.top.disabled = False
-            elif pad.butt_pos == 2:
-                self.ids.middle.on_press = partial(self.turn_on_classical,pad)
-                self.ids.middle.background_normal = 'stripes-up.jpg'
-                self.ids.middle.background_down = 'stripes-up.jpg'
-                self.ids.middle.disabled = False
-            elif pad.butt_pos == 3:
-                self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
-                self.ids.bottom.background_normal = 'stripes-up.jpg'
-                self.ids.bottom.background_down = 'stripes-up.jpg'
-                self.ids.bottom.disabled = False
-
-        elif pad.phase == 3: # music is playing when trial starts, chimps must press stop button to be rewarded
-            pad.butt_pos = random.randint(1,3)
-            
-            if (not random.getrandbits(1)):
-                pad.thisGenre = 'classical'
-                pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever 
-                pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
-                Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/classical/'+pad.thisSongChoice).get_length())
-                pygame.mixer.music.play()
-            else:
-                pad.thisGenre = 'pop'
-                pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
-                pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
-                Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/rock_pop/'+pad.thisSongChoice).get_length())
-                pygame.mixer.music.play()
-
-
-            update_data(pad)
-            
-            if pad.butt_pos == 1:
-                self.ids.top.on_press = partial(self.turn_off,pad)
-                self.ids.top.background_normal = 'dots.jpg'
-                self.ids.top.background_down = 'dots.jpg'
-                self.ids.top.disabled = False
-            elif pad.butt_pos == 2:
-                self.ids.middle.on_press = partial(self.turn_off,pad)
-                self.ids.middle.background_normal = 'dots.jpg'
-                self.ids.middle.background_down = 'dots.jpg'
-                self.ids.middle.disabled = False
-            elif pad.butt_pos == 3:
-                self.ids.bottom.on_press = partial(self.turn_off,pad)
-                self.ids.bottom.background_normal = 'dots.jpg'
-                self.ids.bottom.background_down = 'dots.jpg'
-                self.ids.bottom.disabled = False
-
+        # if pad.phase == 1:
+        #     print('do nothing')
+        #
+        # elif pad.phase == 2:
+        #
+        #
+        #
+        # elif pad.phase == 3: # music is playing when trial starts, chimps must press stop button to be rewarded
+        #
+        #
+        # elif pad.phase == 4: # mixed block of the above phases
+        #     random.sample([1,2,3],9)
 
 
 
@@ -359,13 +293,124 @@ class MusicChoice(Screen):
         #     enable_all_buttons(self)
 
 
+    def phase1(self, pad):
+    # pop button presented singly
+
+    #     if self.ids.top.background_down != 'stripes-up.jpg':
+    #         self.ids.top.disabled = True
+    #     if self.ids.middle.background_down != 'stripes-up.jpg':
+    #         self.ids.middle.disabled = True
+    #     if self.ids.bottom.background_down != 'stripes-up.jpg':
+    #         self.ids.bottom.disabled = True
+
+        disable_all_buttons(self)
+        Clock.schedule_once(self.failed_attempt, 30)
+
+
+        pad.butt_pos = random.randint(1,3)   #formerly 3 => 6, and should be so again...(?)
+        pad.thisGenre = 'pop'
+        pad.randStartPos = True
+        if pad.butt_pos == 1:
+            self.ids.top.on_press = partial(self.turn_on_rock,pad)
+            self.ids.top.background_normal = 'zigzag.jpg'
+            self.ids.top.background_down = 'zigzag.jpg'
+            self.ids.top.disabled = False
+#                print("phase 1, pos 1")
+        elif pad.butt_pos == 2:
+            self.ids.middle.on_press = partial(self.turn_on_rock,pad)
+            self.ids.middle.background_normal = 'zigzag.jpg'
+            self.ids.middle.background_down = 'zigzag.jpg'
+            self.ids.middle.disabled = False
+#                print("phase 1, pos 2")
+        elif pad.butt_pos == 3:
+            self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
+            self.ids.bottom.background_normal = 'zigzag.jpg'
+            self.ids.bottom.background_down = 'zigzag.jpg'
+            self.ids.bottom.disabled = False
+#                print("phase 1, pos 3")
+#            else:
+#                print("phase 1 failure")
+
+    def phase2(self, pad):
+            # classical button presented singly
+
+        disable_all_buttons(self)
+        Clock.schedule_once(self.failed_attempt, 30)
+
+
+        pad.butt_pos = random.randint(1,3)
+        pad.thisGenre = 'classical'
+        pad.randStartPos = True
+        if pad.butt_pos == 1:
+            self.ids.top.on_press = partial(self.turn_on_classical,pad)
+            self.ids.top.background_normal = 'stripes-up.jpg'
+            self.ids.top.background_down = 'stripes-up.jpg'
+            self.ids.top.disabled = False
+        elif pad.butt_pos == 2:
+            self.ids.middle.on_press = partial(self.turn_on_classical,pad)
+            self.ids.middle.background_normal = 'stripes-up.jpg'
+            self.ids.middle.background_down = 'stripes-up.jpg'
+            self.ids.middle.disabled = False
+        elif pad.butt_pos == 3:
+            self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
+            self.ids.bottom.background_normal = 'stripes-up.jpg'
+            self.ids.bottom.background_down = 'stripes-up.jpg'
+            self.ids.bottom.disabled = False
+
+
+    def phase3(self, pad):
+        # music starts and must be turned off
+
+        disable_all_buttons(self)
+        Clock.schedule_once(self.failed_attempt, 30)
+
+        pad.butt_pos = random.randint(1,3)
+
+        if (not random.getrandbits(1)):
+            pad.thisGenre = 'classical'
+            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
+            pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
+            Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/classical/'+pad.thisSongChoice).get_length())
+            pygame.mixer.music.play()
+        else:
+            pad.thisGenre = 'pop'
+            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
+            pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
+            Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/rock_pop/'+pad.thisSongChoice).get_length())
+            pygame.mixer.music.play()
+
+        if pad.actualStart:
+            update_data(pad)
+
+        if pad.butt_pos == 1:
+            self.ids.top.on_press = partial(self.turn_off,pad)
+            self.ids.top.background_normal = 'dots.jpg'
+            self.ids.top.background_down = 'dots.jpg'
+            self.ids.top.disabled = False
+        elif pad.butt_pos == 2:
+            self.ids.middle.on_press = partial(self.turn_off,pad)
+            self.ids.middle.background_normal = 'dots.jpg'
+            self.ids.middle.background_down = 'dots.jpg'
+            self.ids.middle.disabled = False
+        elif pad.butt_pos == 3:
+            self.ids.bottom.on_press = partial(self.turn_off,pad)
+            self.ids.bottom.background_normal = 'dots.jpg'
+            self.ids.bottom.background_down = 'dots.jpg'
+            self.ids.bottom.disabled = False
+
+        # because of initialization, a song is played at the very beginning of every session
+        # TODO: make this not happen, or prevent it from writing to the data
+
+
+
+
+
+
     def load_name(self, *l):
         for id_str, widget in self.parent.ids.iteritems():
             if widget.__self__ is self:
                 self.name = id_str
                 return
-
-
 
 
     def turn_off(self, pad):
@@ -376,6 +421,12 @@ class MusicChoice(Screen):
         #print(self.loc)
         #pad.buttonLocation = self.ids
         update_data(pad)
+        pad.trial = pad.trial + 1
+
+
+        disable_all_buttons(self)
+        Clock.unschedule(self.failed_attempt)
+        Clock.schedule_once(self.new_trial, 3)
 
 
     def turn_on_rock(self, pad):
@@ -388,6 +439,8 @@ class MusicChoice(Screen):
 
 
         update_data(pad)
+        pad.trial = pad.trial + 1
+
 
         #disable
         disable_all_buttons(self)
@@ -412,6 +465,7 @@ class MusicChoice(Screen):
         pygame.mixer.music.play()
 
         update_data(pad)
+        pad.trial = pad.trial + 1
 
         #disable
         disable_all_buttons(self)
@@ -454,13 +508,21 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
 
     def log_failure(self, pad):
         #pad.thisSongChoice = '(timed out)'
-        pad.failedAttempt = '1'
+        pad.failedAttempt = 1
+        pad.lastAttemptSuccess = False  # TODO propagate this
+        pad.thisSongChoice = '(no press)'
         update_data(pad)
 
 
     def start_new_trial(self, dt):
 
         self.manager.current = 'startStim'
+
+
+    def check_endpoint(self,pad):
+        if pad.trial > pad.maxTrials:
+            App.get_running_app().stop()
+
 
 
     ###
@@ -480,7 +542,7 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
 #Builder.load_file('E:/Valent-Choice/ValentChoice.kv')
 #Builder.load_file('Z:/kivy/DMTS/DMTS.kv')
 #Builder.load_file('C:/Users/Diapadion/Dropbox/python - kivy/Valent-Choice/ValentChoice.kv')
-#Builder.load_file('C:/Users/s1229179/git-repos/kivy/Valent-Choice/ValentChoice.kv')
+Builder.load_file('C:/Users/s1229179/git-repos/kivy/Valent-Choice/ValentChoice.kv')
 #Builder.load_file('C:/Users/Diapadion/Documents/GitHub/kivy/Valent-Choice/ValentChoice.kv')
 #
 #Builder.load_file('/home/emma/Desktop/Emma/ValentChoice.kv')
@@ -513,8 +575,8 @@ sm.add_widget(Start(name='startStim'))
 #sm.add_widget(PosReinforce(name='incorrect'))
 
 
-
 sm.current = 'startStim'
+
 
 
 class DMTSApp(App):

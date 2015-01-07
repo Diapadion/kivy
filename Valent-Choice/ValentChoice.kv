@@ -1,10 +1,10 @@
 
 #:import Clock kivy.clock.Clock
-#:import pygame pygame
+
 
 <Start>:
     name: 'startStim'
-    on_pre_enter: pygame.mixer.music.stop()
+    on_pre_enter: self.stop_music()
     #on_enter: self.inc_trial(self.pad)
     FloatLayout:
         canvas.before:
@@ -30,6 +30,7 @@
             pos: self.pos
             size: self.size
     on_enter: Clock.schedule_once(self.display_music_buttons, root.pad.hold)
+    on_pre_leave: self.check_endpoint(self.pad)
 
 
 <ResetInterval>:
@@ -41,16 +42,8 @@
             size: self.size
     on_pre_enter: self.log_failure(self.pad)
     on_enter: Clock.schedule_once(self.start_new_trial, root.pad.hold)
+    on_pre_leave: self.check_endpoint(self.pad)
 
-
-<Holding>:
-    canvas:
-        Color:
-            rgba: 1, 1, 1, 0.7
-        Rectangle:
-            pos: self.pos
-            size: self.size
-    on_enter: Clock.schedule_once(self.display_music_buttons, root.pad.hold)
 
 
 <MusicChoice>:
