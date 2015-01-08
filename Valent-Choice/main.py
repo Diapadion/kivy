@@ -33,6 +33,22 @@ Config.write()
 from kivy.core.window import Window
 Window.fullscreen = True
 
+### imports from the YoctoPuce libraries, for the relay
+from yoctopuce.yocto_api import *
+from yoctopuce.yocto_relay import *
+
+#needed?
+def die(msg):
+    sys.exit(msg + ' (check USB cable)')
+
+# and now initialize all the stuff
+errmsg = YRefParam()
+#Get access to your device, connected locally on USB for instance
+if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
+    sys.exit("init error" + errmsg.value)
+relay = YRelay.FirstRelay()
+#if relay is None: die('no device connected')
+
 
 # this is crucial, it allows us to add 'custom' properties (ala integer vars) to kv objects
 from kivy.properties import ListProperty, ObjectProperty, NumericProperty
@@ -43,25 +59,6 @@ from kivy.graphics.vertex_instructions import (Rectangle,
 from kivy.graphics.context_instructions import Color
 # from kivy.graphics import Color
 
-
-
-### imports from the YoctoPuce libraries, for the relay
-# from yoctopuce.yocto_api import *
-# from yoctopuce.yocto_relay import *
-#
-# #needed?
-# def die(msg):
-#     sys.exit(msg + ' (check USB cable)')
-#
-# # and now initialize all the stuff
-# errmsg = YRefParam()
-# #Get access to your device, connected locally on USB for instance
-# if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-#     sys.exit("init error" + errmsg.value)
-# relay = YRelay.FirstRelay()
-# #if relay is None: die('no device connected')
-#
-# ###
 pygame.init()
 pygame.mixer.init()
 
@@ -86,6 +83,7 @@ class ParametersAndData:
     #dLen, itiLen, toLen, maxTrials, distractors, sampleList, choiceList = globalize(pdict)
 
     timeout, hold, top, mid, bottom, maxTrials = globalize(pdict)
+    # maxTrials can be 10 or less, but not more
 
 
     phase = int(sys.argv[1])
@@ -128,6 +126,9 @@ class ParametersAndData:
 
     subtype4 = random.sample([1,1,1,2,2,2,3,3,3,],9)
     subtype4.append(random.sample([2,3],1))
+    lastSubtype = 0
+
+    rewarded = 0
 
 
 
@@ -139,7 +140,7 @@ class ParametersAndData:
     #          'TrialStart', 'SessionStart',  # 'AbsTime', # redundant
     #          'SampleOn', 'SampleSelect', 'ChoiceOn', 'ChoiceSelect']]
 
-    data = [['StartTime','Trial','Time','MusicPlaying','Song','ButtonPosition','FailedAttempt']]
+    data = [['StartTime','Trial','Time','MusicPlaying','Song','ButtonPosition/Layout','FailedAttempt','Rewarded']]
 
 
 # and now, the instance:
@@ -199,11 +200,9 @@ class MusicChoice(Screen):
     def prepare_stimuli(self, pad):
         butt_pos = random.randint(1,6)
         randomize_buttons_layouts(self,pad,butt_pos)   # fairly self-explanatory
-        # TODO this needs to randomize by TRIAL, not 'session'
-
 
         if pad.phase == 1:
-           self.phase1(pad)
+            self.phase1(pad)
 
         elif pad.phase == 2:
             self.phase2(pad)
@@ -212,18 +211,21 @@ class MusicChoice(Screen):
             self.phase3(pad)
 
         elif pad.phase == 4:
+            if pad.lastAttemptSuccess:
+                pad.lastSubtype = pad.subtype4.pop(0)
 
-             if pad.lastAttemptSuccess:
-                   ind = pad.subtype4.pop(0)
+            if pad.lastSubtype==1:
+                self.phase1(pad)
 
-             if ind==1:
-                 self.phase1(pad)
+            elif pad.lastSubtype==2:
+                self.phase2(pad)
 
-             elif ind==2:
-                 self.phase2(pad)
+            elif pad.lastSubtype==3:
+                self.phase3(pad)
 
-             elif ind==3:
-                 self.phase3(pad)
+        elif pad.phase == 5:
+            self.phase5(pad)
+
 
 
         # disable_all_buttons(self)
@@ -304,7 +306,7 @@ class MusicChoice(Screen):
     #         self.ids.bottom.disabled = True
 
         disable_all_buttons(self)
-        Clock.schedule_once(self.failed_attempt, 30)
+        Clock.schedule_once(self.failed_attempt, pad.timeout)
 
 
         pad.butt_pos = random.randint(1,3)   #formerly 3 => 6, and should be so again...(?)
@@ -335,7 +337,7 @@ class MusicChoice(Screen):
             # classical button presented singly
 
         disable_all_buttons(self)
-        Clock.schedule_once(self.failed_attempt, 30)
+        Clock.schedule_once(self.failed_attempt, pad.timeout)
 
 
         pad.butt_pos = random.randint(1,3)
@@ -362,7 +364,9 @@ class MusicChoice(Screen):
         # music starts and must be turned off
 
         disable_all_buttons(self)
-        Clock.schedule_once(self.failed_attempt, 30)
+        if pad.actualStart:
+            Clock.schedule_once(self.failed_attempt, pad.timeout)
+
 
         pad.butt_pos = random.randint(1,3)
 
@@ -370,13 +374,13 @@ class MusicChoice(Screen):
             pad.thisGenre = 'classical'
             pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
             pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
-            Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/classical/'+pad.thisSongChoice).get_length())
+            #Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/classical/'+pad.thisSongChoice).get_length())
             pygame.mixer.music.play()
         else:
             pad.thisGenre = 'pop'
             pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
             pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
-            Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/rock_pop/'+pad.thisSongChoice).get_length())
+            #Clock.schedule_once(self.failed_attempt, pygame.mixer.Sound(os.curdir+'/rock_pop/'+pad.thisSongChoice).get_length())
             pygame.mixer.music.play()
 
         if pad.actualStart:
@@ -399,10 +403,16 @@ class MusicChoice(Screen):
             self.ids.bottom.disabled = False
 
         # because of initialization, a song is played at the very beginning of every session
-        # TODO: make this not happen, or prevent it from writing to the data
+        # make this not happen, or prevent it from writing to the data
+        # Done.
 
 
 
+
+
+    def phase5(self, pad):
+        #do nothing yet
+        print('ack')
 
 
 
@@ -418,14 +428,17 @@ class MusicChoice(Screen):
 
         pad.thisSongChoice = ''
         pad.thisGenre = '(stop)'
+        pad.rewarded = 1
         #print(self.loc)
         #pad.buttonLocation = self.ids
         update_data(pad)
         pad.trial = pad.trial + 1
-
+        pad.rewarded = 1
+        self.dispense_reward()
 
         disable_all_buttons(self)
         Clock.unschedule(self.failed_attempt)
+        pad.lastAttemptSuccess = True
         Clock.schedule_once(self.new_trial, 3)
 
 
@@ -437,16 +450,17 @@ class MusicChoice(Screen):
         # else:
         pygame.mixer.music.play()
 
-
+        pad.rewarded = 1
         update_data(pad)
         pad.trial = pad.trial + 1
-
+        pad.rewarded = 1
+        self.dispense_reward()
 
         #disable
         disable_all_buttons(self)
 
         Clock.unschedule(self.failed_attempt)
-
+        pad.lastAttemptSuccess = True
         #Clock.schedule_once(self.turn_buttons_back_on, pad.timeout)
         Clock.schedule_once(self.new_trial, 3)
 
@@ -464,14 +478,17 @@ class MusicChoice(Screen):
         # else:
         pygame.mixer.music.play()
 
+        pad.rewarded = 1
         update_data(pad)
         pad.trial = pad.trial + 1
+        pad.rewarded = 1
 
+        self.dispense_reward()
         #disable
         disable_all_buttons(self)
 
         Clock.unschedule(self.failed_attempt)
-
+        pad.lastAttemptSuccess = True
         Clock.schedule_once(self.new_trial, 3)
 
         #pad.buttonLocation = self.ids
@@ -483,7 +500,10 @@ class MusicChoice(Screen):
         enable_all_buttons(self)
 
 
-
+    def dispense_reward(self):
+        relay.set_state(YRelay.STATE_B)
+        relat.set_state(YRelay.STATE_A)
+        return
 
     def failed_attempt(self,num):
 
@@ -511,6 +531,7 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
         pad.failedAttempt = 1
         pad.lastAttemptSuccess = False  # TODO propagate this
         pad.thisSongChoice = '(no press)'
+        pad.rewarded = 0
         update_data(pad)
 
 
