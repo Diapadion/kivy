@@ -5,6 +5,7 @@ middleButton: classical
 bottomButton: off
 date: 11/08/14
 trials: 10
+test_trials: 5
 iti: 0.5
 delay: 0.5
 distractors: 1

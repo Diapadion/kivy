@@ -34,20 +34,20 @@ from kivy.core.window import Window
 Window.fullscreen = True
 
 ### imports from the YoctoPuce libraries, for the relay
-from yoctopuce.yocto_api import *
-from yoctopuce.yocto_relay import *
-
-#needed?
-def die(msg):
-    sys.exit(msg + ' (check USB cable)')
-
-# and now initialize all the stuff
-errmsg = YRefParam()
-#Get access to your device, connected locally on USB for instance
-if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-    sys.exit("init error" + errmsg.value)
-relay = YRelay.FirstRelay()
-#if relay is None: die('no device connected')
+# from yoctopuce.yocto_api import *
+# from yoctopuce.yocto_relay import *
+#
+# #needed?
+# def die(msg):
+#     sys.exit(msg + ' (check USB cable)')
+#
+# # and now initialize all the stuff
+# errmsg = YRefParam()
+# #Get access to your device, connected locally on USB for instance
+# if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
+#     sys.exit("init error" + errmsg.value)
+# relay = YRelay.FirstRelay()
+# #if relay is None: die('no device connected')
 
 
 # this is crucial, it allows us to add 'custom' properties (ala integer vars) to kv objects
@@ -82,11 +82,14 @@ class ParametersAndData:
 
     #dLen, itiLen, toLen, maxTrials, distractors, sampleList, choiceList = globalize(pdict)
 
-    timeout, hold, top, mid, bottom, maxTrials = globalize(pdict)
+    timeout, hold, top, mid, bottom, maxTrials, testingTrials = globalize(pdict)
     # maxTrials can be 10 or less, but not more
 
-
     phase = int(sys.argv[1])
+
+    if phase == 5:
+        maxTrials = testingTrials
+
 
 
     inputfile.close()
@@ -128,7 +131,15 @@ class ParametersAndData:
     subtype4.append(random.sample([2,3],1))
     lastSubtype = 0
 
+    subtype5 = random.sample([1,1,1,1,1,1,1,1,1,1,
+                              2,2,2,2,2,2,2,2,2,2,
+                              3,3,3,3,3,3,3,3,3,3,
+                              4,4,4,4,4,4,4,4,4,4,5],40)
+
+
     rewarded = 0
+
+
 
 
 
@@ -171,6 +182,7 @@ class Start(Screen):  ##should Anchor/Box/etc.layout be Screen?
         pad.actualStart = True
 
 
+
         pad.thisSongChoice = 'N/A'
         pad.thisGenre = '(start pressed)'
         update_data(pad)
@@ -198,8 +210,8 @@ class MusicChoice(Screen):
     pad = ObjectProperty(parameVars)
 
     def prepare_stimuli(self, pad):
-        butt_pos = random.randint(1,6)
-        randomize_buttons_layouts(self,pad,butt_pos)   # fairly self-explanatory
+
+        pad.butt_pos = random.randint(1,3)   #formerly 3 => 6, and should be so again...(?)
 
         if pad.phase == 1:
             self.phase1(pad)
@@ -224,6 +236,7 @@ class MusicChoice(Screen):
                 self.phase3(pad)
 
         elif pad.phase == 5:
+            pad.butt_pos = random.randint(1,6)  # this is now not about position, but 6 distinct 'layouts'
             self.phase5(pad)
 
 
@@ -309,8 +322,6 @@ class MusicChoice(Screen):
         Clock.schedule_once(self.failed_attempt, pad.timeout)
 
 
-        pad.butt_pos = random.randint(1,3)   #formerly 3 => 6, and should be so again...(?)
-        pad.thisGenre = 'pop'
         pad.randStartPos = True
         if pad.butt_pos == 1:
             self.ids.top.on_press = partial(self.turn_on_rock,pad)
@@ -339,9 +350,6 @@ class MusicChoice(Screen):
         disable_all_buttons(self)
         Clock.schedule_once(self.failed_attempt, pad.timeout)
 
-
-        pad.butt_pos = random.randint(1,3)
-        pad.thisGenre = 'classical'
         pad.randStartPos = True
         if pad.butt_pos == 1:
             self.ids.top.on_press = partial(self.turn_on_classical,pad)
@@ -367,8 +375,6 @@ class MusicChoice(Screen):
         if pad.actualStart:
             Clock.schedule_once(self.failed_attempt, pad.timeout)
 
-
-        pad.butt_pos = random.randint(1,3)
 
         if (not random.getrandbits(1)):
             pad.thisGenre = 'classical'
@@ -411,6 +417,40 @@ class MusicChoice(Screen):
 
 
     def phase5(self, pad):
+        randomize_buttons_layouts(self,pad, pad.butt_pos)   # fairly self-explanatory, see above
+        pad.rewarded = 0
+
+        if pad.actualStart:
+            Clock.schedule_once(self.failed_attempt, pad.timeout)
+
+        if pad.lastAttemptSuccess:
+            pad.lastSubtype = pad.subtype5.pop(0)
+
+        if pad.lastSubtype == 1: # pop is playing
+            pad.thisGenre = 'pop'
+            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
+            pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
+            pygame.mixer.music.play()
+
+        if pad.lastSubtype == 2: # classical is playing
+            pad.thisGenre = 'classical'
+            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
+            pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
+            pygame.mixer.music.play()
+
+        else: # nothing is playing
+            pad.thisGenre = '(silent)'
+            pad.thisSongChoice = 'N/A'
+
+        if pad.actualStart:
+            update_data(pad)
+
+        enable_all_buttons(self)
+
+
+
+
+
         #do nothing yet
         print('ack')
 
@@ -443,6 +483,7 @@ class MusicChoice(Screen):
 
 
     def turn_on_rock(self, pad):
+        pad.thisGenre = 'pop'
         pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
         pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
         # if pad.randStartPos :
@@ -471,6 +512,7 @@ class MusicChoice(Screen):
 
 
     def turn_on_classical(self, pad):
+        pad.thisGenre = 'classical'
         pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
         pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
         # if pad.randStartPos :
@@ -484,6 +526,7 @@ class MusicChoice(Screen):
         pad.rewarded = 1
 
         self.dispense_reward()
+
         #disable
         disable_all_buttons(self)
 
@@ -501,8 +544,9 @@ class MusicChoice(Screen):
 
 
     def dispense_reward(self):
-        relay.set_state(YRelay.STATE_B)
-        relat.set_state(YRelay.STATE_A)
+        # relay.set_state(YRelay.STATE_B)
+        # time.sleep(0.1)
+        # relay.set_state(YRelay.STATE_A)
         return
 
     def failed_attempt(self,num):

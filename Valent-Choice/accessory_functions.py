@@ -207,6 +207,8 @@ def globalize(pdict):
     bottom = pdict['bottomButton:']
 
     maxTrials = float(pdict['trials:'])
+    testingTrials = float(pdict['test_trials:'])
 
 
-    return timeout, hold, top, middle, bottom, maxTrials
+    return timeout, hold, top, middle, bottom, maxTrials, testingTrials
+
