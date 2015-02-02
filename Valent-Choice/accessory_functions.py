@@ -35,6 +35,7 @@ def update_data(pad):
                          pad.thisGenre, pad.thisSongChoice,pad.butt_pos,pad.failedAttempt,pad.rewarded])
             #, pad.buttonLocation])
 
+       #print(pad.data)
         #pad.trial = pad.trial + 1
 
 
@@ -85,9 +86,9 @@ def disable_all_buttons(ob):
        # ob.ids.bottom.background_color = (0.1, 1, 0.1, 0.00)
        # ob.ids.middle.background_color = (0.1, 1, 0.1, 0.00)
 
-       ob.ids.top.disabled = True
-       ob.ids.bottom.disabled = True
-       ob.ids.middle.disabled = True
+       ob.ids.n1.disabled = True
+       ob.ids.n2.disabled = True
+       ob.ids.n3.disabled = True
 
 def enable_all_buttons(ob):
 
@@ -95,76 +96,115 @@ def enable_all_buttons(ob):
        # ob.ids.bottom.background_color = (0.1, 1, 0.1, 0.00)
        # ob.ids.middle.background_color = (0.1, 1, 0.1, 0.00)
 
-       ob.ids.top.disabled = False
-       ob.ids.bottom.disabled = False
-       ob.ids.middle.disabled = False
+       ob.ids.n1.disabled = False
+       ob.ids.n2.disabled = False
+       ob.ids.n3.disabled = False
 
 time.time()
 
 def randomize_buttons_layouts(self,pad,rint):
     if rint == 1 :
-        self.ids.top.on_press = partial(self.turn_on_rock,pad)
-        self.ids.top.background_normal = 'zigzag.jpg'
-        self.ids.top.background_down = 'zigzag.jpg'
-        self.ids.middle.on_press = partial(self.turn_off,pad)
-        self.ids.middle.background_normal = 'dots.jpg'
-        self.ids.middle.background_down = 'dots.jpg'
-        self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
-        self.ids.bottom.background_normal = 'stripes-up.jpg'
-        self.ids.bottom.background_down = 'stripes-up.jpg'
+        self.ids.n1.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n1.background_normal = 'zigzag.jpg'
+        self.ids.n1.background_down = 'zigzag.jpg'
+        self.ids.n2.on_press = partial(self.turn_off,pad)
+        self.ids.n2.background_normal = 'dots.jpg'
+        self.ids.n2.background_down = 'dots.jpg'
+        self.ids.n3.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n3.background_normal = 'stripes-up.jpg'
+        self.ids.n3.background_down = 'stripes-up.jpg'
     elif rint == 2 :
-        self.ids.top.on_press = partial(self.turn_on_rock,pad)
-        self.ids.top.background_normal = 'zigzag.jpg'
-        self.ids.top.background_down = 'zigzag.jpg'
-        self.ids.middle.on_press = partial(self.turn_on_classical,pad)
-        self.ids.middle.background_normal = 'stripes-up.jpg'
-        self.ids.middle.background_down = 'stripes-up.jpg'
-        self.ids.bottom.on_press = partial(self.turn_off,pad)
-        self.ids.bottom.background_normal = 'dots.jpg'
-        self.ids.bottom.background_down = 'dots.jpg'
+        self.ids.n1.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n1.background_normal = 'zigzag.jpg'
+        self.ids.n1.background_down = 'zigzag.jpg'
+        self.ids.n2.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n2.background_normal = 'stripes-up.jpg'
+        self.ids.n2.background_down = 'stripes-up.jpg'
+        self.ids.n3.on_press = partial(self.turn_off,pad)
+        self.ids.n3.background_normal = 'dots.jpg'
+        self.ids.n3.background_down = 'dots.jpg'
     elif rint == 3 :
-        self.ids.top.on_press = partial(self.turn_off,pad)
-        self.ids.top.background_normal = 'dots.jpg'
-        self.ids.top.background_down = 'dots.jpg'
-        self.ids.middle.on_press = partial(self.turn_on_rock,pad)
-        self.ids.middle.background_normal = 'zigzag.jpg'
-        self.ids.middle.background_down = 'zigzag.jpg'
-        self.ids.bottom.on_press = partial(self.turn_on_classical,pad)
-        self.ids.bottom.background_normal = 'stripes-up.jpg'
-        self.ids.bottom.background_down = 'stripes-up.jpg'
+        self.ids.n1.on_press = partial(self.turn_off,pad)
+        self.ids.n1.background_normal = 'dots.jpg'
+        self.ids.n1.background_down = 'dots.jpg'
+        self.ids.n2.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n2.background_normal = 'zigzag.jpg'
+        self.ids.n2.background_down = 'zigzag.jpg'
+        self.ids.n3.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n3.background_normal = 'stripes-up.jpg'
+        self.ids.n3.background_down = 'stripes-up.jpg'
     elif rint == 4 :
-        self.ids.top.on_press = partial(self.turn_off,pad)
-        self.ids.top.background_normal = 'dots.jpg'
-        self.ids.top.background_down = 'dots.jpg'
-        self.ids.middle.on_press = partial(self.turn_on_classical,pad)
-        self.ids.middle.background_normal = 'stripes-up.jpg'
-        self.ids.middle.background_down = 'stripes-up.jpg'
-        self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
-        self.ids.bottom.background_normal = 'zigzag.jpg'
-        self.ids.bottom.background_down = 'zigzag.jpg'
+        self.ids.n1.on_press = partial(self.turn_off,pad)
+        self.ids.n1.background_normal = 'dots.jpg'
+        self.ids.n1.background_down = 'dots.jpg'
+        self.ids.n2.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n2.background_normal = 'stripes-up.jpg'
+        self.ids.n2.background_down = 'stripes-up.jpg'
+        self.ids.n3.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n3.background_normal = 'zigzag.jpg'
+        self.ids.n3.background_down = 'zigzag.jpg'
     elif rint == 5 :
-        self.ids.top.on_press = partial(self.turn_on_classical,pad)
-        self.ids.top.background_normal = 'stripes-up.jpg'
-        self.ids.top.background_down = 'stripes-up.jpg'
-        self.ids.middle.on_press = partial(self.turn_on_rock,pad)
-        self.ids.middle.background_normal = 'zigzag.jpg'
-        self.ids.middle.background_down = 'zigzag.jpg'
-        self.ids.bottom.on_press = partial(self.turn_off,pad)
-        self.ids.bottom.background_normal = 'dots.jpg'
-        self.ids.bottom.background_down = 'dots.jpg'
+        self.ids.n1.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n1.background_normal = 'stripes-up.jpg'
+        self.ids.n1.background_down = 'stripes-up.jpg'
+        self.ids.n2.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n2.background_normal = 'zigzag.jpg'
+        self.ids.n2.background_down = 'zigzag.jpg'
+        self.ids.n3.on_press = partial(self.turn_off,pad)
+        self.ids.n3.background_normal = 'dots.jpg'
+        self.ids.n3.background_down = 'dots.jpg'
     elif rint == 6 :
-        self.ids.top.on_press = partial(self.turn_on_classical,pad)
-        self.ids.top.background_normal = 'stripes-up.jpg'
-        self.ids.top.background_down = 'stripes-up.jpg'
-        self.ids.middle.on_press = partial(self.turn_off,pad)
-        self.ids.middle.background_normal = 'dots.jpg'
-        self.ids.middle.background_down = 'dots.jpg'
-        self.ids.bottom.on_press = partial(self.turn_on_rock,pad)
-        self.ids.bottom.background_normal = 'zigzag.jpg'
-        self.ids.bottom.background_down = 'zigzag.jpg'
+        self.ids.n1.on_press = partial(self.turn_on_classical,pad)
+        self.ids.n1.background_normal = 'stripes-up.jpg'
+        self.ids.n1.background_down = 'stripes-up.jpg'
+        self.ids.n2.on_press = partial(self.turn_off,pad)
+        self.ids.n2.background_normal = 'dots.jpg'
+        self.ids.n2.background_down = 'dots.jpg'
+        self.ids.n3.on_press = partial(self.turn_on_rock,pad)
+        self.ids.n3.background_normal = 'zigzag.jpg'
+        self.ids.n3.background_down = 'zigzag.jpg'
 
        
-       
+
+def disable_grid(ob, pad):
+    ob.ids.n1.background_normal = 'grayBkgd.png'
+    ob.ids.n1.background_down = 'grayBkgd.png'
+    ob.ids.n1.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n2.background_normal = 'grayBkgd.png'
+    ob.ids.n2.background_down = 'grayBkgd.png'
+    ob.ids.n2.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n3.background_normal = 'grayBkgd.png'
+    ob.ids.n3.background_down = 'grayBkgd.png'
+    ob.ids.n3.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n4.background_normal = 'grayBkgd.png'
+    ob.ids.n4.background_down = 'grayBkgd.png'
+    ob.ids.n4.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n5.background_normal = 'grayBkgd.png'
+    ob.ids.n5.background_down = 'grayBkgd.png'
+    ob.ids.n5.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n6.background_normal = 'grayBkgd.png'
+    ob.ids.n6.background_down = 'grayBkgd.png'
+    ob.ids.n6.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n7.background_normal = 'grayBkgd.png'
+    ob.ids.n7.background_down = 'grayBkgd.png'
+    ob.ids.n7.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n8.background_normal = 'grayBkgd.png'
+    ob.ids.n8.background_down = 'grayBkgd.png'
+    ob.ids.n8.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n9.background_normal = 'grayBkgd.png'
+    ob.ids.n9.background_down = 'grayBkgd.png'
+    ob.ids.n9.on_press = partial(ob.empty_touch, pad)
+
+
+   #  ob.ids.n1.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n2.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n3.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n4.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n5.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n6.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n7.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n8.background_color = (0.1, 1, 0.1, 0.00)
+   # ob.ids.n9.background_color = (0.1, 1, 0.1, 0.00)
 
 
 #handlers = {"date:"

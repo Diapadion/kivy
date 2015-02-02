@@ -64,6 +64,7 @@
         Button:
             id: n1
             loc: 'top'
+            marker: 1
             background_normal: 'dots.jpg'
             background_down: 'dots.jpg'
             #background_color: (0,0,0,1)
@@ -73,6 +74,7 @@
         Button:
             id: n2
             loc: 'middle'
+            marker: 2
             background_normal: 'zigzag.jpg'
             background_down: 'zigzag.jpg'
             #background_color: (0,0,0,1)
@@ -82,199 +84,43 @@
         Button:
             id: n3
             loc: 'bottom'
+            marker: 3
             background_normal: 'fractal.jpg'
             background_down: 'fractal.jpg'
             #background_color: (0,0,0,1)
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
             #on_press: root.turn_on_classical(root.pad)
-
-
-<OCR_MusicChoice>:
-    orientation: 'horizontal'
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.7
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        rows: 3
-        spacing: 10
-        padding: 10
         Button:
-            id: top
-            background_normal: 'dots.jpg'
-            background_down: 'dots.jpg'
-            background_color: (0,0,0,1)
+            id: n4
+            marker: 4
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_off(root.pad)
         Button:
-            id: middle
-            background_normal: 'zigzag.jpg'
-            background_down: 'zigzag.jpg'
-            background_color: (0,0,0,1)
+            id: n5
+            marker: 5
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_classical(root.pad)
         Button:
-            id: bottom
-            background_normal: 'fractal.jpg'
-            background_down: 'fractal.jpg'
-            background_color: (0,0,0,1)
+            id: n6
+            marker: 6
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_rock(root.pad)
-
-<CRO_MusicChoice>:
-    orientation: 'horizontal'
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.7
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        rows: 3
-        spacing: 10
-        padding: 10
         Button:
-            id: top
-            background_normal: 'dots.jpg'
-            background_down: 'dots.jpg'
-            background_color: (0,0,0,1)
+            id: n7
+            marker: 7
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_classical(root.pad)
         Button:
-            id: middle
-            background_normal: 'zigzag.jpg'
-            background_down: 'zigzag.jpg'
-            background_color: (0,0,0,1)
+            id: n8
+            marker: 8
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_rock(root.pad)
         Button:
-            id: bottom
-            background_normal: 'fractal.jpg'
-            background_down: 'fractal.jpg'
-            background_color: (0,0,0,1)
+            id: n9
+            marker: 9
             background_disabled_down: 'whiteBkgd.png'
             background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_off(root.pad)
-
-<RCO_MusicChoice>:
-    orientation: 'horizontal'
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.7
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        rows: 3
-        spacing: 10
-        padding: 10
-        Button:
-            id: top
-            background_normal: 'dots.jpg'
-            background_down: 'dots.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_rock(root.pad)
-        Button:
-            id: middle
-            background_normal: 'zigzag.jpg'
-            background_down: 'zigzag.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_classical(root.pad)
-        Button:
-            id: bottom
-            background_normal: 'fractal.jpg'
-            background_down: 'fractal.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_off(root.pad)
-
-<ORC_MusicChoice>:
-    orientation: 'horizontal'
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.7
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        rows: 3
-        spacing: 10
-        padding: 10
-        Button:
-            id: top
-            background_normal: 'dots.jpg'
-            background_down: 'dots.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_off(root.pad)
-        Button:
-            id: middle
-            background_normal: 'zigzag.jpg'
-            background_down: 'zigzag.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_rock(root.pad)
-        Button:
-            id: bottom
-            background_normal: 'fractal.jpg'
-            background_down: 'fractal.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_classical(root.pad)
-
-<COR_MusicChoice>:
-    orientation: 'horizontal'
-    GridLayout:
-        canvas.before:
-            Color:
-                rgba: 1, 1, 1, 0.7
-            Rectangle:
-                pos: self.pos
-                size: self.size
-        rows: 3
-        spacing: 10
-        padding: 10
-        Button:
-            id: top
-            background_normal: 'dots.jpg'
-            background_down: 'dots.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_classical(root.pad)
-        Button:
-            id: middle
-            background_normal: 'zigzag.jpg'
-            background_down: 'zigzag.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_off(root.pad)
-        Button:
-            id: bottom
-            background_normal: 'fractal.jpg'
-            background_down: 'fractal.jpg'
-            background_color: (0,0,0,1)
-            background_disabled_down: 'whiteBkgd.png'
-            background_disabled_normal: 'whiteBkgd.png'
-            on_press: root.turn_on_rock(root.pad)
-
 
 
 
