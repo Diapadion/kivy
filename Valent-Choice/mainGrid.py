@@ -33,21 +33,21 @@ Config.write()
 from kivy.core.window import Window
 Window.fullscreen = True
 
-### imports from the YoctoPuce libraries, for the relay
-# from yoctopuce.yocto_api import *
-# from yoctopuce.yocto_relay import *
-#
-# #needed?
-# def die(msg):
-#     sys.exit(msg + ' (check USB cable)')
-#
-# # and now initialize all the stuff
-# errmsg = YRefParam()
-# #Get access to your device, connected locally on USB for instance
-# if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-#     sys.exit("init error" + errmsg.value)
-# relay = YRelay.FirstRelay()
-# #if relay is None: die('no device connected')
+## imports from the YoctoPuce libraries, for the relay
+from yoctopuce.yocto_api import *
+from yoctopuce.yocto_relay import *
+
+#needed?
+def die(msg):
+    sys.exit(msg + ' (check USB cable)')
+
+# and now initialize all the stuff
+errmsg = YRefParam()
+#Get access to your device, connected locally on USB for instance
+if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
+    sys.exit("init error" + errmsg.value)
+relay = YRelay.FirstRelay()
+#if relay is None: die('no device connected')
 
 
 # this is crucial, it allows us to add 'custom' properties (ala integer vars) to kv objects
@@ -151,7 +151,7 @@ class ParametersAndData:
     #          'TrialStart', 'SessionStart',  # 'AbsTime', # redundant
     #          'SampleOn', 'SampleSelect', 'ChoiceOn', 'ChoiceSelect']]
 
-    data = [['StartTime','Trial','Time','MusicPlaying','Song','ButtonPosition/Layout','FailedAttempt','Rewarded']]
+    data = [['StartTime','Trial','Time','MusicPlaying','Song','ButtonPosition/Layout','FailedAttempt','Rewarded','PortPressed']]
 
 
 # and now, the instance:
@@ -296,18 +296,19 @@ class MusicChoice(Screen):
                 self.name = id_str
                 return
 
-    def empty_touch(self, pad):
+    def empty_touch(self, mark, pad):
         # records data when participant presses an 'empty' space
 
         #print(self.marker)
         # mark = self.marker
 
         pad.failedAttempt = 2
-        #pad.portPressed = mark
+        pad.portPressed = mark
 
         update_data(pad)
 
         pad.failedAttempt = 0
+        pad.portPressed = 0
 
 
     def turn_off(self, pad):
@@ -318,16 +319,17 @@ class MusicChoice(Screen):
         pad.rewarded = 1
         #print(self.loc)
         #pad.buttonLocation = self.ids
-        update_data(pad)
-        pad.trial = pad.trial + 1
-        pad.rewarded = 1
-        self.dispense_reward()
-
         if pad.phase == 6:
             pad.portPressed = pad.butt_pos[2]
             disable_grid(self, pad)
         else:
             disable_all_buttons(self)
+
+        update_data(pad)
+        pad.trial = pad.trial + 1
+        pad.rewarded = 0
+        self.dispense_reward()
+        pad.portPressed = 0
 
         Clock.unschedule(self.failed_attempt)
         pad.lastAttemptSuccess = True
@@ -344,17 +346,19 @@ class MusicChoice(Screen):
         pygame.mixer.music.play()
 
         pad.rewarded = 1
-        update_data(pad)
-        pad.trial = pad.trial + 1
-        pad.rewarded = 1
-        self.dispense_reward()
-
         if pad.phase == 6:
             pad.portPressed = pad.butt_pos[0]
             disable_grid(self, pad)
         else:
             disable_all_buttons(self)
-        #disable
+
+
+        update_data(pad)
+        pad.trial = pad.trial + 1
+        pad.rewarded = 0
+        self.dispense_reward()
+        pad.portPressed = 0
+
 
         Clock.unschedule(self.failed_attempt)
         pad.lastAttemptSuccess = True
@@ -377,17 +381,18 @@ class MusicChoice(Screen):
         pygame.mixer.music.play()
 
         pad.rewarded = 1
-        update_data(pad)
-        pad.trial = pad.trial + 1
-        pad.rewarded = 1
-
         if pad.phase == 6:
             pad.portPressed = pad.butt_pos[1]
             disable_grid(self, pad)
         else:
             disable_all_buttons(self)
 
+        update_data(pad)
+        pad.trial = pad.trial + 1
+        pad.rewarded = 0
+
         self.dispense_reward()
+        pad.portPressed = 0
 
         Clock.unschedule(self.failed_attempt)
         pad.lastAttemptSuccess = True
@@ -400,9 +405,9 @@ class MusicChoice(Screen):
 
 
     def dispense_reward(self):
-        # relay.set_state(YRelay.STATE_B)
-        # time.sleep(0.1)
-        # relay.set_state(YRelay.STATE_A)
+        relay.set_state(YRelay.STATE_B)
+        time.sleep(0.1)
+        relay.set_state(YRelay.STATE_A)
         return
 
     def failed_attempt(self,num):
@@ -432,6 +437,7 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
         pad.lastAttemptSuccess = False  # TODO propagate this
         pad.thisSongChoice = '(no press)'
         pad.rewarded = 0
+        pad.portPressed = 0
         update_data(pad)
 
 
@@ -459,6 +465,7 @@ class ResetInterval(Screen):  # aka time between music choice and start stim
 
 if parameVars.phase == 6:
     Builder.load_file('C:/Users/s1229179/git-repos/kivy/Valent-Choice/ValentGrid.kv')
+    #Builder.load_file('/home/emma/Desktop/Emma/ValentGrid.kv')
 
 else:
     #root_widget = Builder.load_file('C:/Program Files (x86)/Kivy-1.8.0-py3.3-win32/kivy/mine/sample.kv')

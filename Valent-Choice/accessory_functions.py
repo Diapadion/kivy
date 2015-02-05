@@ -32,7 +32,8 @@ def write_data(data,start):
 def update_data(pad):
         dickory = time.time() - pad.sessionStartT
         pad.data.append([pad.sessionStartT, pad.trial, dickory,
-                         pad.thisGenre, pad.thisSongChoice,pad.butt_pos,pad.failedAttempt,pad.rewarded])
+                         pad.thisGenre, pad.thisSongChoice,pad.butt_pos,pad.failedAttempt,pad.rewarded,
+                         pad.portPressed])
             #, pad.buttonLocation])
 
        #print(pad.data)
@@ -169,31 +170,31 @@ def randomize_buttons_layouts(self,pad,rint):
 def disable_grid(ob, pad):
     ob.ids.n1.background_normal = 'grayBkgd.png'
     ob.ids.n1.background_down = 'grayBkgd.png'
-    ob.ids.n1.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n1.on_press = partial(ob.empty_touch, ob.ids.n1.marker, pad)
     ob.ids.n2.background_normal = 'grayBkgd.png'
     ob.ids.n2.background_down = 'grayBkgd.png'
-    ob.ids.n2.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n2.on_press = partial(ob.empty_touch, ob.ids.n2.marker,pad)
     ob.ids.n3.background_normal = 'grayBkgd.png'
     ob.ids.n3.background_down = 'grayBkgd.png'
-    ob.ids.n3.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n3.on_press = partial(ob.empty_touch, ob.ids.n3.marker,pad)
     ob.ids.n4.background_normal = 'grayBkgd.png'
     ob.ids.n4.background_down = 'grayBkgd.png'
-    ob.ids.n4.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n4.on_press = partial(ob.empty_touch, ob.ids.n4.marker,pad)
     ob.ids.n5.background_normal = 'grayBkgd.png'
     ob.ids.n5.background_down = 'grayBkgd.png'
-    ob.ids.n5.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n5.on_press = partial(ob.empty_touch, ob.ids.n5.marker,pad)
     ob.ids.n6.background_normal = 'grayBkgd.png'
     ob.ids.n6.background_down = 'grayBkgd.png'
-    ob.ids.n6.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n6.on_press = partial(ob.empty_touch, ob.ids.n6.marker,pad)
     ob.ids.n7.background_normal = 'grayBkgd.png'
     ob.ids.n7.background_down = 'grayBkgd.png'
-    ob.ids.n7.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n7.on_press = partial(ob.empty_touch, ob.ids.n7.marker,pad)
     ob.ids.n8.background_normal = 'grayBkgd.png'
     ob.ids.n8.background_down = 'grayBkgd.png'
-    ob.ids.n8.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n8.on_press = partial(ob.empty_touch, ob.ids.n8.marker,pad)
     ob.ids.n9.background_normal = 'grayBkgd.png'
     ob.ids.n9.background_down = 'grayBkgd.png'
-    ob.ids.n9.on_press = partial(ob.empty_touch, pad)
+    ob.ids.n9.on_press = partial(ob.empty_touch, ob.ids.n9.marker,pad)
 
 
    #  ob.ids.n1.background_color = (0.1, 1, 0.1, 0.00)
