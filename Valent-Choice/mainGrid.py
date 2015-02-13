@@ -34,20 +34,20 @@ from kivy.core.window import Window
 Window.fullscreen = True
 
 ## imports from the YoctoPuce libraries, for the relay
-from yoctopuce.yocto_api import *
-from yoctopuce.yocto_relay import *
-
-#needed?
-def die(msg):
-    sys.exit(msg + ' (check USB cable)')
-
-# and now initialize all the stuff
-errmsg = YRefParam()
-#Get access to your device, connected locally on USB for instance
-if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
-    sys.exit("init error" + errmsg.value)
-relay = YRelay.FirstRelay()
-#if relay is None: die('no device connected')
+# from yoctopuce.yocto_api import *
+# from yoctopuce.yocto_relay import *
+#
+# #needed?
+# def die(msg):
+#     sys.exit(msg + ' (check USB cable)')
+#
+# # and now initialize all the stuff
+# errmsg = YRefParam()
+# #Get access to your device, connected locally on USB for instance
+# if YAPI.RegisterHub("usb", errmsg) != YAPI.SUCCESS:
+#     sys.exit("init error" + errmsg.value)
+# relay = YRelay.FirstRelay()
+# #if relay is None: die('no device connected')
 
 
 # this is crucial, it allows us to add 'custom' properties (ala integer vars) to kv objects
@@ -85,7 +85,7 @@ class ParametersAndData:
     timeout, hold, top, mid, bottom, maxTrials, testingTrials = globalize(pdict)
     # maxTrials can be 10 or less, but not more
 
-    phase = 6
+    phase =6 # needed for legacy effects
 
     maxTrials = testingTrials
 
@@ -128,18 +128,22 @@ class ParametersAndData:
 
     subtype4 = random.sample([1,1,1,2,2,2,3,3,3,],9)
     subtype4.append(random.sample([2,3],1))
-    lastSubtype = 0
+#    lastSubtype = 0
+    lastSubtype = int(sys.argv[1])
 
-    subtype5 = random.sample([1,1,1,1,1,1,1,1,1,1,
-                              2,2,2,2,2,2,2,2,2,2,
-                              3,3,3,3,3,3,3,3,3,3,
-                              4,4,4,4,4,4,4,4,4,4,5],41)
 
+    # subtype5 = random.sample([1,1,1,1,1,1,1,1,1,1,
+    #                           2,2,2,2,2,2,2,2,2,2,
+    #                           3,3,3,3,3,3,3,3,3,3,
+    #                           4,4,4,4,4,4,4,4,4,4,5],41)
+    subtype5 = subtype4
 
     rewarded = 0
 
     # phase 6 vars
     portPressed = 0
+
+  #  http://aricoozo.com/fascinating-large-scale-portrait-paintings-by-erik-maniscalco/
 
 
 
@@ -205,6 +209,13 @@ class Holding(Screen):  # aka time between start stim and sample
             App.get_running_app().stop()
 
 
+        pad.trialStartT = time.time() - pad.sessionStartT
+
+        pad.randStartPos = False
+        pad.failedAttempt = 0
+        pad.actualStart = True
+
+
 
 
 class MusicChoice(Screen):
@@ -212,36 +223,41 @@ class MusicChoice(Screen):
 
     def prepare_stimuli(self, pad):
 
-
-
         # randomly allocate buttons
         pad.butt_pos = random.sample(range(1,10), 3)
         # 1st, pop; 2nd, classical; 3rd, off
+        disable_grid(self, pad)
+
 
         # some legacy stuff to keep it from misperforming
         pad.rewarded = 0
 
         if pad.actualStart:
-            Clock.schedule_once(self.failed_attempt, pad.timeout)
+            #Clock.schedule_once(self.failed_attempt, pad.timeout)
             disable_grid(self, pad)
 
-        if pad.lastAttemptSuccess:
-            pad.lastSubtype = pad.subtype5.pop(0)
+
+
+        # if pad.lastAttemptSuccess:
+        #     pad.lastSubtype = pad.subtype5.pop(0)
+#             pad.lastSubtype = random.sample([1,2,3],2) #new, but unneeded
+
 
         # including the allocation of music-playing trial types
-        if pad.lastSubtype == 1: # pop is playing
-            pad.thisGenre = 'pop'
-            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
-            pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
-            pygame.mixer.music.play()
-        elif pad.lastSubtype == 2: # classical is playing
-            pad.thisGenre = 'classical'
-            pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
-            pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
-            pygame.mixer.music.play()
-        else: # nothing is playing
-            pad.thisGenre = '(silent)'
-            pad.thisSongChoice = 'N/A'
+        if pad.trial == 1:
+            if pad.lastSubtype == 1: # pop is playing
+                pad.thisGenre = 'pop'
+                pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/rock_pop')) #change dir name to whatever
+                pygame.mixer.music.load(os.curdir+'/rock_pop/'+pad.thisSongChoice)
+                pygame.mixer.music.play()
+            elif pad.lastSubtype == 2: # classical is playing
+                pad.thisGenre = 'classical'
+                pad.thisSongChoice = random.choice(os.listdir(os.curdir+'/classical')) #change dir name to whatever
+                pygame.mixer.music.load(os.curdir+'/classical/'+pad.thisSongChoice)
+                pygame.mixer.music.play()
+            else: # nothing is playing
+                pad.thisGenre = '(silent)'
+                pad.thisSongChoice = 'N/A'
 
         if pad.actualStart:
             update_data(pad)
@@ -328,11 +344,9 @@ class MusicChoice(Screen):
         update_data(pad)
         pad.trial = pad.trial + 1
         pad.rewarded = 0
-        self.dispense_reward()
+        #self.dispense_reward()
         pad.portPressed = 0
 
-        Clock.unschedule(self.failed_attempt)
-        pad.lastAttemptSuccess = True
         Clock.schedule_once(self.new_trial, 3)
 
 
@@ -343,7 +357,8 @@ class MusicChoice(Screen):
         # if pad.randStartPos :
         #     pygame.mixer.music.play(0,random.randint(1,2))
         # else:
-        pygame.mixer.music.play()
+        pygame.mixer.music.play(-1)
+
 
         pad.rewarded = 1
         if pad.phase == 6:
@@ -356,7 +371,7 @@ class MusicChoice(Screen):
         update_data(pad)
         pad.trial = pad.trial + 1
         pad.rewarded = 0
-        self.dispense_reward()
+        #self.dispense_reward()
         pad.portPressed = 0
 
 
@@ -378,7 +393,9 @@ class MusicChoice(Screen):
         # if pad.randStartPos :
         #     pygame.mixer.music.play(0,random.randint(1,2))
         # else:
-        pygame.mixer.music.play()
+        #pygame.mixer.music.set_endevent(pygame.mixer.music.play())
+
+        pygame.mixer.music.play(-1)
 
         pad.rewarded = 1
         if pad.phase == 6:
@@ -391,7 +408,7 @@ class MusicChoice(Screen):
         pad.trial = pad.trial + 1
         pad.rewarded = 0
 
-        self.dispense_reward()
+        #self.dispense_reward()
         pad.portPressed = 0
 
         Clock.unschedule(self.failed_attempt)
@@ -405,9 +422,9 @@ class MusicChoice(Screen):
 
 
     def dispense_reward(self):
-        relay.set_state(YRelay.STATE_B)
-        time.sleep(0.1)
-        relay.set_state(YRelay.STATE_A)
+        # relay.set_state(YRelay.STATE_B)
+        # time.sleep(0.1)
+        # relay.set_state(YRelay.STATE_A)
         return
 
     def failed_attempt(self,num):
@@ -419,7 +436,7 @@ class MusicChoice(Screen):
 
 
     def new_trial(self,num):
-        pygame.mixer.music.stop()
+        #pygame.mixer.music.stop() # not anymore...
 
         self.manager.current = 'holder'
 
@@ -505,7 +522,7 @@ sm.add_widget(Start(name='startStim'))
 #sm.add_widget(PosReinforce(name='incorrect'))
 
 
-sm.current = 'startStim'
+sm.current = 'music'
 
 
 
